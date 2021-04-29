@@ -10,6 +10,7 @@ webdriver-manager = "*"
 
 [dev-packages]
 mypy = "*"
+pyinstaller = "*"
 
 [requires]
 python_version = "3.9"
