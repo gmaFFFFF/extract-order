@@ -3,6 +3,7 @@ from typing import Dict
 
 from selenium import webdriver
 from selenium.webdriver.remote.webdriver import WebDriver as RemoteWebDriver
+from webdriver_manager.opera import OperaDriverManager
 
 from rosreestr_order.page import PageEgrn1_step1, PageEgrn1_step2, PageEgrn1_step3, PageEgrn1_step4, \
     PageEgrn1_step5
@@ -33,15 +34,20 @@ class Customer:
     # Профиль текущего пользователя используется чтобы использовать расширения для авто заполнения форм
     profile: Dict[str, str] = {"Opera": f"C:/Users/{os.getlogin()}/AppData/Roaming/Opera Software/Opera Stable"}
 
-    def __init__(self, browser: str = "Ie"):
+    def __init__(self, browser: str = "Opera"):
+        if browser == "Firefox":
+            raise ValueError("Сайт Росреестра не совместим с Firefox")
         # TODO: Доработать использование профайла
         if browser == "Opera":
             options = webdriver.ChromeOptions()
             options.add_argument(f'user-data-dir={self.profile["Opera"]}')
+            # TODO: Сделать автоматический выбор версии драйвера в зависимости от версии Opera браузер
+            executable_path = OperaDriverManager("v.90.0.4430.85", cache_valid_range=365).install()
         else:
             options = None
+            # TODO: Перейти на webdriver_manager по всем поддерживаемым браузерам
+            executable_path = f'./driver/{self.drivers_name[browser]}'
 
-        executable_path = f'./driver/{self.drivers_name[browser]}'
         self.driver = self.browsers_driver[browser](executable_path=executable_path, options=options)
         self.driver.implicitly_wait(15)  # секунды
         self.driver.get("https://rosreestr.gov.ru/wps/portal/p/cc_present/EGRN_1")

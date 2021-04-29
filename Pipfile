@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 openpyxl = "*"
 selenium = "*"
+webdriver-manager = "*"
 
 [dev-packages]
 mypy = "*"
