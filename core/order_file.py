@@ -37,7 +37,7 @@ class OrderFileXlsx:
     tbl: Table = field(init=False)
 
     def __post_init__(self, table_name):
-        self.wb = load_workbook(self.workbook_path)
+        self.wb = load_workbook(self.workbook_path, data_only=True)
         self.ws, self.tbl = [(ws, ws.tables[table_name]) for ws in self.wb.worksheets
                              for tbl in ws.tables.keys() if table_name == tbl][0]
 
