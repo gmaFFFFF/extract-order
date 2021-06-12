@@ -9,10 +9,11 @@ from datetime import date
 from time import sleep
 
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webdriver import WebDriver as RemoteWebDriver
 
 from core.order_file import Order
-from .elements import Button, ComboBox, Label, List, Input, SLEEP_TIME
+from .elements import BaseElem, Button, ComboBox, Label, List, Input, SLEEP_TIME
 from .locators import *
 
 
@@ -88,6 +89,15 @@ class PageEgrn1_step1(PageEgrn1):
             self.type_obj = 'Земельный участок'
             self.cn = order.cn
             self.area = order.area
+            # Если при вводе сведений об очередном земельном участке не меняется регион и район его нахождения,
+            # то перед нажатием кнопки "Перейти к сведениям о заявителе", курсор ввода находится внутри поля "Площадь".
+            # Когда программа нажимет кнопку сайт Росреестра иногда сбрасывает площадь на пустое значение и не переходит
+            # на следующую страницу. Программа этого не понимает и прекращает выполнение.
+            # Поэтому перед нажатием кнопки лучше перейти на следующее поле.
+            # TODO: Переделать в специализированную версию класса input
+            b = BaseElem(LocatorEgrn1_step1.area_input)
+            b.__get__(self, b.__class__).send_keys(Keys.TAB)
+
             self.area_unit = 'Квадратный метр'
             self.region = order.region
             self.district = order.district
