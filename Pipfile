@@ -9,6 +9,7 @@ selenium = "*"
 webdriver-manager = "*"
 pywin32 = "*"
 httpx = "~=0.18"
+clize = "*"
 
 [dev-packages]
 mypy = "*"
