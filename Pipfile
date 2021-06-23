@@ -7,6 +7,8 @@ name = "pypi"
 openpyxl = "*"
 selenium = "*"
 webdriver-manager = "*"
+pywin32 = "*"
+httpx = "~=0.18"
 
 [dev-packages]
 mypy = "*"
