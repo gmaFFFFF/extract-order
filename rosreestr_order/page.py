@@ -77,16 +77,60 @@ class PageEgrn1_step1(PageEgrn1):
     region = ComboBox(LocatorEgrn1_step1.region_input, LocatorEgrn1_step1.combobox_list_pattern)
     district = ComboBox(LocatorEgrn1_step1.district_input, LocatorEgrn1_step1.combobox_list_pattern)
     button_next = Button(LocatorEgrn1_step1.next_button)
+    house = Input(LocatorEgrn1_step1.house_input)
+    appartment = Input(LocatorEgrn1_step1.appartment_input)
 
-    def type_order_parcel(self, order: Order):
-        while (self.type_obj != 'Земельный участок' or
+    def type_order(self, order: Order):
+        switcher = {'Земельный участок': self._type_order_parcel
+            , 'Участок недр': self._type_order_parcel
+            , 'Жилой дом': self._type_order_bldg
+            , 'Здание (нежилое)': self._type_order_bldg
+            , 'Объект незавершённого строительства': self._type_order_bldg
+            , 'Помещение (нежилое)': self._type_order_bldg
+            , 'Предприятие как имущественный комплекс(ПИК)': self._type_order_bldg
+            , 'Сооружение': self._type_order_bldg
+            , 'Квартира': self._type_order_appartment
+            , 'Комната': self._type_order_appartment}
+
+        switcher[order.type](order)
+
+    def _type_order_bldg(self, order: Order):
+        while (self.type_obj != order.type or
+               self.cn != order.cn or
+               self.region != order.region or
+               (self.district != order.district and order.district is not None) or
+               self.house != order.house):
+            resync_if_necessary(self)
+            self.type_obj = order.type
+            self.cn = order.cn
+            self.region = order.region
+            self.district = order.district
+            self.house = order.house
+
+    def _type_order_appartment(self, order: Order):
+        while (self.type_obj != order.type or
+               self.cn != order.cn or
+               self.region != order.region or
+               (self.district != order.district and order.district is not None) or
+               self.house != order.house or
+               self.appartment != order.apartment):
+            resync_if_necessary(self)
+            self.type_obj = order.type
+            self.cn = order.cn
+            self.region = order.region
+            self.district = order.district
+            self.house = order.house
+            self.appartment = order.apartment
+
+    def _type_order_parcel(self, order: Order):
+        while (self.type_obj != order.type or
                self.cn != order.cn or
                self.area != str(order.area) or
                self.area_unit != 'Квадратный метр' or
                self.region != order.region or
                (self.district != order.district and order.district is not None)):
             resync_if_necessary(self)
-            self.type_obj = 'Земельный участок'
+            self.type_obj = order.type
             self.cn = order.cn
             self.area = order.area
             # Если при вводе сведений об очередном земельном участке не меняется регион и район его нахождения,

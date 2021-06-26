@@ -70,10 +70,10 @@ class Customer:
             print(f"Попытка заказать выписку на {order.cn}...")
             if i != 0:
                 page_5.repeat_order()
-            page_1.type_order_parcel(order)
+            page_1.type_order(order)
             if i == 0:
                 input("Заполните первую страницу и нажмите Enter...")
-                page_1.type_order_parcel(order)
+                page_1.type_order(order)
             page_1.next_step()
             if i == 0:
                 input("Заполните вторую страницу и нажмите Enter...")
