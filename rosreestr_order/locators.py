@@ -8,6 +8,7 @@ from selenium.webdriver.common.by import By
 class LocatorEgrn1_step1:
     _input_xpath_1 = "(// div[contains(text(), 'Площадь:')] /../../../../../../../../../../..// input)"
     _input_xpath_2 = "//div[contains(text(),'Регион:')]/../../../../../../../../../../.."
+    _input_xpath_3 = "//div[text()='Улица:']/../../../../../../../../../../../following-sibling::node()"
     _menu_xpath = "//td[contains(@class,'gwt-MenuItem')]/span[contains(text(),'{0}')]"
 
     header_label = (By.XPATH, "//div[@innertext='1. Детали запроса (шаг 1 из 4)']")
@@ -16,9 +17,10 @@ class LocatorEgrn1_step1:
     cn_input = (By.XPATH, "//div[contains(text(),'Кадастровый номер:')]/../../../../../../../../../../..//input")
     area_input = (By.XPATH, f"{_input_xpath_1}[1]")
     area_unit_input = (By.XPATH, f"{_input_xpath_1}[2]")
-
     region_input = (By.XPATH, f"{_input_xpath_2}//input")
     district_input = (By.XPATH, f"({_input_xpath_2}/following-sibling::node()//input)[1]")
+    house_input = (By.XPATH, f"({_input_xpath_3}[1]//input)[2]")
+    appartment_input = (By.XPATH, f"({_input_xpath_3}[4]//input)[2]")
     next_button = (By.XPATH, "//span[contains(text(),'Перейти к сведениям о заявителе')]/../..")
 
 
