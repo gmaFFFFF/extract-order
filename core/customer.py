@@ -65,6 +65,9 @@ class Customer:
         page_5: PageEgrn1_step5 = PageEgrn1_step5(self.driver)
 
         for i, order in enumerate(self.orders):
+            print(f"В очереди: {len(self.orders) - i} объект(а,ов)")
+            print(f"\tОжидаемое время на обработку: {round((len(self.orders) - i) * 3 / 60, 2)} часов")
+            print(f"Попытка заказать выписку на {order.cn}...")
             if i != 0:
                 page_5.repeat_order()
             page_1.type_order_parcel(order)
@@ -82,3 +85,4 @@ class Customer:
             page_4.sign(person_sur_name)
             order.__dict__.update(page_5.get_order_details())
             self.order_file.write_order(order)
+            print(f"\tУспешно!")
