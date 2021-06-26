@@ -6,30 +6,25 @@ from selenium.webdriver.common.by import By
 
 
 class LocatorEgrn1_step1:
-    _input_xpath_1 = "//div[3]/div//div[@class='v-horizontallayout']//div[@class='v-verticallayout']"
-    _input_xpath_2 = f"{_input_xpath_1}/following::input"
+    _input_xpath_1 = "(// div[contains(text(), 'Площадь:')] /../../../../../../../../../../..// input)"
+    _input_xpath_2 = "//div[contains(text(),'Регион:')]/../../../../../../../../../../.."
     _menu_xpath = "//td[contains(@class,'gwt-MenuItem')]/span[contains(text(),'{0}')]"
 
     header_label = (By.XPATH, "//div[@innertext='1. Детали запроса (шаг 1 из 4)']")
     combobox_list_pattern = (By.XPATH, _menu_xpath)
-    type_obj_input = (By.CSS_SELECTOR,
-                      ".v-verticallayout-base-egrp-wrapper div:nth-of-type(3) .v-verticallayout-content-wrapper "
-                      "div:nth-of-type(1) div:nth-of-type(1) div:nth-of-type(1) > div:nth-of-type(1) > "
-                      ".v-verticallayout:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) "
-                      "input.v-filterselect-input")
-    cn_input = (By.XPATH, f"({_input_xpath_1}//input)[1]")
-    area_input = (By.XPATH, f"({_input_xpath_2})[1]")
-    area_unit_input = (By.XPATH, f"({_input_xpath_2})[2]")
-    region_input = (By.XPATH, f"({_input_xpath_2})[3]")
-    district_input = (By.XPATH, f"({_input_xpath_2})[4]")
+    type_obj_input = (By.XPATH, "//div[contains(text(),'Тип объекта:')]/../../../../../../../../../../..//input")
+    cn_input = (By.XPATH, "//div[contains(text(),'Кадастровый номер:')]/../../../../../../../../../../..//input")
+    area_input = (By.XPATH, f"{_input_xpath_1}[1]")
+    area_unit_input = (By.XPATH, f"{_input_xpath_1}[2]")
+
+    region_input = (By.XPATH, f"{_input_xpath_2}//input")
+    district_input = (By.XPATH, f"({_input_xpath_2}/following-sibling::node()//input)[1]")
     next_button = (By.XPATH, "//span[contains(text(),'Перейти к сведениям о заявителе')]/../..")
 
 
 class LocatorEgrn1_step2:
     header_label = (By.XPATH, "//div[@innertext='2. Сведения о заявителе или его представителе (шаг 2 из 4)']")
-    person_sur_name = (By.CSS_SELECTOR,
-                       "div:nth-of-type(3) > div > .v-verticallayout > div > div:nth-of-type(1) > div > "
-                       ".v-horizontallayout .v-verticallayout input.v-textfield")
+    person_sur_name = (By.XPATH, "//div[contains(text(),'Фамилия:')]/../../../../../../../../../../..//input")
     next_button = (By.XPATH, "//span[contains(text(),'Перейти к прилагаемым к запросу документам')]/../..")
 
 
