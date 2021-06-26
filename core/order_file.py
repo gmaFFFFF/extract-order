@@ -15,10 +15,13 @@ class Order:
     """
     Cодержит сведения, необходимые для заказа выписки из ЕГРН на зу и сохранения реквизитов заявки
     """
-    cn: str
-    area: int
-    region: str
+    cn: str = None
+    region: str = None
+    type: str = "Земельный участок"
+    area: int = None
     district: str = None
+    house: str = None
+    apartment: str = None
     order_num: str = None
     order_code: str = None
     order_date: date = None
@@ -31,7 +34,7 @@ class OrderFileXlsx:
     Считывает и записывает заказ (Order) из/в файл excel
     """
 
-    workbook_path: Path = Path('orders_parcel.xlsx')
+    workbook_path: Path = Path('orders.xlsx')
     table_name: InitVar[str] = 'orders'
     ws: worksheet = field(init=False)
     tbl: Table = field(init=False)
@@ -48,9 +51,9 @@ class OrderFileXlsx:
 
     def get_order_result_cols_index(self) -> Dict[str, str]:
         cols, data = self.get_tbl_cols_and_data()
-        num = [c.id for c in cols if c.name == "order_num"][0] - 1
-        code = [c.id for c in cols if c.name == "order_code"][0] - 1
-        date_order = [c.id for c in cols if c.name == "order_date"][0] - 1
+        num = [i for i, c in enumerate(cols) if c.name == "order_num"][0]
+        code = [i for i, c in enumerate(cols) if c.name == "order_code"][0]
+        date_order = [i for i, c in enumerate(cols) if c.name == "order_date"][0]
 
         return {"order_num": data[0][num].column_letter,
                 "order_code": data[0][code].column_letter,
@@ -63,15 +66,17 @@ class OrderFileXlsx:
         # Загрузка данных из таблицы Excel, кроме заголовка
         orders: List[Order] = []
         for row in data:
-            val = [c.value for c in row]
-            if None in val[:2]:
-                continue
-            order = Order(**dict(zip(headers, val)), index=row[0].row)
+            all_data = dict(zip(headers, [c.value for c in row]))
+            # Фильтруем заголовки по данным, которые поддерживает класс Order if col.name in Order.__dict__.keys()
+            data = {k: v for k, v in all_data.items() if k in Order.__dict__}
+
+            order = Order(**data, index=row[0].row)
             orders.append(order)
 
-        # Фильтрация исполненных заказов и сортировка по республикам и КН
+        # Фильтрация исполненных заказов и сортировка по типу объекта, республикам и КН
         # чтобы сократить время на выбор республики и района
-        orders_fs = sorted((order for order in orders if order.order_num is None), key=attrgetter("region", "cn"))
+        orders_fs = sorted((order for order in orders if order.order_num is None),
+                           key=attrgetter("type", "region", "cn"))
 
         return orders_fs
 
