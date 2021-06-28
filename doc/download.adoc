@@ -1,0 +1,17 @@
+[#скачать_бота]
+== Загрузка бота на компьютер
+
+Существует несколько способов загрузки бота:
+
+* Если на компьютере установлена система контроля версий https://www.mercurial-scm.org/downloads[Mercurial] (_Предпочтительно_):
+. Запустите командную строку и перейдите в каталог, в котором планируется разместить бот;
+. Выполните команду:
+[source,shell]
+hg clone http://hg.code.sf.net/p/cadaster-utils/extract-order extract-order
++
+* Если на компьютере установлена система контроля версий https://git-scm.com/download/win[Git]:
+. Запустите командную строку и перейдите в каталог, в котором планируется разместить бот;
+. Выполните команду:
+[source,shell]
+git clone --depth 1 https://github.com/gmaFFFFF/extract-order extract-order
+* Если систем контроля версий нет, то скачайте файл по https://github.com/gmaFFFFF/extract-order/archive/refs/heads/develop.zip[ссылке] и распакуйте его в нужный каталог.

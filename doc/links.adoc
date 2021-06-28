@@ -1,0 +1,9 @@
+== Связанные проекты
+
+. https://github.com/gmaFFFFF/extract-renamer[Переименовыватель] выписок из ЕГРН.
+. https://github.com/gmaFFFFF/extract2shp[Конвертер] выписок из ЕГРН в формат Esri Shape и sql insert.
+. https://plan-kpt-xml2html.sourceforge.io/plan-kpt-xml2html.xhtml[Онлайн] конвертер xml схем расположения земельного участка или земельных участков на кадастровом плане территории в человекочитаемый вид.
+. https://github.com/gmaFFFFF/land-management-contracts[Шаблоны] договоров и технических заданий по землеустройству в формате AsciiDoc.
+. https://github.com/gmaFFFFF/realty-db-in-excel[База данных] недвижимости в Excel.
+. https://github.com/gmaFFFFF/cadaster-parcel-descr-dwg[Описание земельного участка] -- программа подготовки графической части описания земельного участка для выполнения кадастровых работ (устарело).
+. https://github.com/gmaFFFFF/shubich-vo-imja-zhizni/releases[«Во имя жизни»] (автобиографическая повесть) проф. землеустройства М.П. Шубича.

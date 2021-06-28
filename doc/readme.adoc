@@ -1,0 +1,45 @@
+:toc: macro
+:toc-title: Содержание
+:toclevels: 5
+:imagesdir: img
+= Бот для заказа и скачивания выписок из ЕГРН
+
+image::icon.png[Баран]
+
+[quote,Армянская пословица]
+Хороший пастух, если захочет, и от барана масло получит
+
+toc::[]
+
+include::target.adoc[]
+
+include::download.adoc[]
+
+include::install.adoc[]
+
+== Инструкция по использованию
+
+=== Заказ выписок
+
+include::use_case/order_limits.adoc[leveloffset=+2]
+
+include::use_case/order_preparing.adoc[leveloffset=+2]
+
+include::use_case/order_run.adoc[leveloffset=+2]
+
+// Скачивание выписок из Outlook
+include::use_case/download_run.adoc[leveloffset=+1]
+
+include::links.adoc[]
+
+include::plan.adoc[]
+
+== Условия распространения бота
+
+Бот распространяется под открытой лицензией MIT.
+
+Если кратко, то это означает, что Вы можете пользоваться ботом, улучшать его и, если сможете, то даже продавать его.
+При этом автор не несёт ни за что никакой ответственности, всё на Ваш страх и риск.
+Условия лицензии содержатся в файле license.txt, расположенном в корневом каталоге бота.
+
+Популярное объяснение условий лицензии можно почитать https://habr.com/ru/post/310976/[здесь].
