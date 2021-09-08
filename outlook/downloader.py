@@ -1,10 +1,11 @@
 import asyncio
 import re
+import unicodedata
 from pathlib import Path
 
 import httpx
-import unicodedata
 import win32com.client
+from httpx import Timeout, ReadTimeout
 
 
 def slugify(value, allow_unicode=True):
@@ -66,6 +67,12 @@ async def download(client: httpx.AsyncClient, extract: tuple, file_path: str):
                 async for chunk in response.aiter_bytes():
                     file.write(chunk)
                 print(f"Выписка № {num} получена. Результат записан в файл {file_path}")
+
+    except ReadTimeout as e:
+        print(f"\nВыписку № {num} скачать не удалось, так как ожидание ответа "
+              f"от сервера Росреестра превысило разумное время ({client.timeout.read} сек.). \n"
+              f"Повторите попытку позже.")
+        return num, False
     except Exception as e:
         print(f"Ошибка при скачивании выписки № {num}. Попробуйте в другой раз.")
         return num, False
@@ -74,7 +81,7 @@ async def download(client: httpx.AsyncClient, extract: tuple, file_path: str):
 
 
 async def downloads_all(extract: dict[str, str], target_folder: Path = Path('.')):
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(timeout=Timeout(30)) as client:
         targets = {num: f"{Path(target_folder) / Path(slugify(num))}.zip" for num in extract.keys()}
         aws = (download(client, (num, url), targets[num]) for num, url in extract.items())
         L = await asyncio.gather(*aws)
