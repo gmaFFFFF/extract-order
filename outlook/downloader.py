@@ -45,7 +45,7 @@ def get_result_num_and_ref(mail_body: str) -> dict[str, str]:
 
 
 def find_new_rosreestr_result_mail(filter_subj: str = 'Уведомление о завершении обработки запроса',
-                                   filter_sender='no-reply@rosreestr.ru') -> list:
+                                   filter_sender='noreply-site@rosreestr.ru') -> list:
     outlook = win32com.client.Dispatch("Outlook.Application")
     explorer = outlook.ActiveExplorer()
     folder = explorer.CurrentFolder
