@@ -419,7 +419,7 @@ set target=%userprofile%\desktop\extracts-downloaded
 [arabic]
 . https://github.com/gmaFFFFF/extract-renamer[Переименовыватель] выписок
 из ЕГРН.
-. https://github.com/gmaFFFFF/extract2shp[Конвертер] выписок из ЕГРН в
+. https://github.com/gmaFFFFF/extract-converter[Конвертер] выписок из ЕГРН в
 формат Esri Shape и sql insert.
 . https://plan-kpt-xml2html.sourceforge.io/plan-kpt-xml2html.xhtml[Онлайн]
 конвертер xml схем расположения земельного участка или земельных
