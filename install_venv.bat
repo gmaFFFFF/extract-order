@@ -47,7 +47,7 @@ rem Обновляем pip  в виртуальной среде pipenv. Нуж�
 pipenv run py -m pip install %trustedHostParam% --upgrade pip
 
 rem Установка зависимостей приложения
-pipenv install %pipenvParam%
+pipenv sync %pipenvParam%
 
 rem Обновить переменную среды path
 call RefreshEnv.cmd
