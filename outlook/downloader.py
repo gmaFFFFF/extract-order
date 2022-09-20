@@ -6,6 +6,7 @@ from pathlib import Path
 import httpx
 import win32com.client
 from httpx import Timeout, ReadTimeout
+from tenacity import AsyncRetrying, stop_after_attempt, wait_random_exponential, retry_if_exception_type
 
 
 def slugify(value, allow_unicode=True):
@@ -59,14 +60,24 @@ def find_new_rosreestr_result_mail(filter_subj: str = 'Уведомление о
 
 
 async def download(client: httpx.AsyncClient, extract: tuple, file_path: Path):
+    max_attempt = 5
     num, url = extract
+
     print(f"Запрашивается выписка № {num}")
     try:
         with file_path.open('wb') as file:
-            async with client.stream("GET", url) as response:
-                async for chunk in response.aiter_bytes():
-                    file.write(chunk)
-                print(f"Выписка № {num} получена. Результат записан в файл {file_path}")
+            async for attempt in AsyncRetrying(stop=stop_after_attempt(max_attempt)
+                    , wait=wait_random_exponential(multiplier=5, max=60)
+                    , retry=retry_if_exception_type(ReadTimeout)
+                    , reraise=True
+                    , before_sleep=lambda state: print(
+                        f"Попытка № {state.attempt_number} скачать выписку № {num} не удалась. "
+                        f"Следующая через {state.idle_for:0.0f} сек")):
+                with attempt:
+                    async with client.stream("GET", url) as response:
+                        async for chunk in response.aiter_bytes():
+                            file.write(chunk)
+                        print(f"Выписка № {num} получена. Результат записан в файл {file_path}")
 
     except ReadTimeout as e:
         print(f"\nВыписку № {num} скачать не удалось, так как ожидание ответа "

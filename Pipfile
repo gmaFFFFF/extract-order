@@ -9,6 +9,7 @@ httpx = "~=0.18"
 openpyxl = "~=3.0"
 pywin32 = "~=301.0"
 selenium = "~=3.141"
+tenacity = "~=8.0"
 webdriver-manager = "~=3.4"
 
 [dev-packages]
