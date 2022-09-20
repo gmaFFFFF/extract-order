@@ -58,11 +58,11 @@ def find_new_rosreestr_result_mail(filter_subj: str = 'Уведомление о
     return mails
 
 
-async def download(client: httpx.AsyncClient, extract: tuple, file_path: str):
+async def download(client: httpx.AsyncClient, extract: tuple, file_path: Path):
     num, url = extract
     print(f"Запрашивается выписка № {num}")
     try:
-        with open(file_path, 'wb') as file:
+        with file_path.open('wb') as file:
             async with client.stream("GET", url) as response:
                 async for chunk in response.aiter_bytes():
                     file.write(chunk)
@@ -72,9 +72,11 @@ async def download(client: httpx.AsyncClient, extract: tuple, file_path: str):
         print(f"\nВыписку № {num} скачать не удалось, так как ожидание ответа "
               f"от сервера Росреестра превысило разумное время ({client.timeout.read} сек.). \n"
               f"Повторите попытку позже.")
+        file_path.unlink(True)
         return num, False
     except Exception as e:
         print(f"Ошибка при скачивании выписки № {num}. Попробуйте в другой раз.")
+        file_path.unlink(True)
         return num, False
     else:
         return num, True
@@ -82,7 +84,7 @@ async def download(client: httpx.AsyncClient, extract: tuple, file_path: str):
 
 async def downloads_all(extract: dict[str, str], target_folder: Path = Path('.')):
     async with httpx.AsyncClient(timeout=Timeout(60), verify=False) as client:
-        targets = {num: f"{Path(target_folder) / Path(slugify(num))}.zip" for num in extract.keys()}
+        targets = {num: target_folder / f"{slugify(num)}.zip" for num in extract.keys()}
         aws = (download(client, (num, url), targets[num]) for num, url in extract.items())
         L = await asyncio.gather(*aws)
         return L
