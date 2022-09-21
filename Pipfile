@@ -4,12 +4,12 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-openpyxl = "*"
-selenium = "*"
-webdriver-manager = "*"
-pywin32 = "*"
+clize = "~=4.2"
 httpx = "~=0.18"
-clize = "*"
+openpyxl = "~=3.0"
+pywin32 = "~=301.0"
+selenium = "~=3.141"
+webdriver-manager = "~=3.4"
 
 [dev-packages]
 mypy = "*"
