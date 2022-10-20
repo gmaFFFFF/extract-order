@@ -5,8 +5,8 @@ from pathlib import Path
 
 import httpx
 import win32com.client
-from httpx import Timeout, ReadTimeout
-from tenacity import AsyncRetrying, stop_after_attempt, wait_random_exponential, retry_if_exception_type
+from httpx import Timeout, ReadTimeout, HTTPStatusError
+from tenacity import AsyncRetrying, stop_after_attempt, wait_exponential, retry_if_exception_type
 
 
 def slugify(value, allow_unicode=True):
@@ -60,15 +60,15 @@ def find_new_rosreestr_result_mail(filter_subj: str = 'Уведомление о
 
 
 async def download(client: httpx.AsyncClient, extract: tuple, file_path: Path):
-    max_attempt = 5
+    max_attempt = 21
     num, url = extract
 
     print(f"Запрашивается выписка № {num}")
     try:
         with file_path.open('wb') as file:
             async for attempt in AsyncRetrying(stop=stop_after_attempt(max_attempt)
-                    , wait=wait_random_exponential(multiplier=5, max=60)
-                    , retry=retry_if_exception_type(ReadTimeout)
+                    , wait=wait_exponential(multiplier=1, max=180)
+                    , retry=retry_if_exception_type((ReadTimeout, HTTPStatusError))
                     , reraise=True
                     , before_sleep=lambda state: print(
                         f"Попытка № {state.attempt_number} скачать выписку № {num} не удалась. "
@@ -77,6 +77,10 @@ async def download(client: httpx.AsyncClient, extract: tuple, file_path: Path):
                     async with client.stream("GET", url) as response:
                         async for chunk in response.aiter_bytes():
                             file.write(chunk)
+
+                        if response.is_error:
+                            file.truncate(0)
+                            response.raise_for_status()
                         print(f"Выписка № {num} получена. Результат записан в файл {file_path}")
 
     except ReadTimeout as e:
