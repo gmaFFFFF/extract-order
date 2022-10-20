@@ -15,6 +15,8 @@ image::icon.png[Баран]
 Следовательно, бот разучился заказывать выписки, но с новым интерфейсом это теперь и не нужно.
 
 Скачивать выписки в новых условиях бот обучен.
+
+Устаревший функционал заказа выписок не стал «выпиливать», но обновил документацию.
 ====
 
 toc::[]
@@ -26,14 +28,6 @@ include::download.adoc[]
 include::install.adoc[]
 
 == Инструкция по использованию
-
-=== Заказ выписок
-
-include::use_case/order_limits.adoc[leveloffset=+2]
-
-include::use_case/order_preparing.adoc[leveloffset=+2]
-
-include::use_case/order_run.adoc[leveloffset=+2]
 
 // Скачивание выписок из Outlook
 include::use_case/download_run.adoc[leveloffset=+1]
