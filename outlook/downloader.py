@@ -1,5 +1,6 @@
 import asyncio
 import re
+import sys
 import unicodedata
 from pathlib import Path
 
@@ -8,6 +9,10 @@ import win32com.client
 from httpx import Timeout, ReadTimeout, HTTPStatusError
 from tenacity import AsyncRetrying, stop_after_attempt, wait_exponential, retry_if_exception_type
 
+# Решение проблемы с вылетом с ошибкой Asyncio Event Loop is Closed
+# https://github.com/encode/httpx/issues/914#issuecomment-622586610
+if sys.version_info[0] == 3 and sys.version_info[1] >= 8 and sys.platform.startswith('win'):
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 def slugify(value, allow_unicode=True):
     """
