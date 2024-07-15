@@ -103,7 +103,7 @@ async def download(client: httpx.AsyncClient, extract: tuple, file_path: Path):
 
 
 async def downloads_all(extract: dict[str, str], target_folder: Path = Path('.')):
-    async with httpx.AsyncClient(timeout=Timeout(60), verify=False) as client:
+    async with httpx.AsyncClient(timeout=Timeout(180), verify=False) as client:
         targets = {num: target_folder / f"{slugify(num)}.zip" for num in extract.keys()}
         aws = (download(client, (num, url), targets[num]) for num, url in extract.items())
         L = await asyncio.gather(*aws)
