@@ -1,4 +1,5 @@
 import asyncio
+import itertools
 import re
 import sys
 import unicodedata
@@ -44,22 +45,24 @@ def get_result_num_and_ref(mail_body: str) -> dict[str, str]:
     num_pattern = get_result_num_and_ref.num_pattern
     ref_pattern = get_result_num_and_ref.ref_pattern
 
-    num = num_pattern.search(mail_body).group(0)
     ref = ref_pattern.search(mail_body).group(0)
+    num = num_pattern.search(mail_body).group(0) if num_pattern.search(mail_body) else f"КУВИ_Unk_{ref[-15:-2]}"
 
     return {num: ref}
 
 
-def find_new_rosreestr_result_mail(filter_subj: str = 'Уведомление о завершении обработки запроса',
+def find_new_rosreestr_result_mail(filter_subj: list[str] = ['Уведомление о завершении обработки запроса',
+                                                             'Уведомление о завершении обработки обращения'],
                                    filter_sender='noreply-site@rosreestr.ru') -> list:
     outlook = win32com.client.Dispatch("Outlook.Application")
     explorer = outlook.ActiveExplorer()
     folder = explorer.CurrentFolder
     items = folder.Items
-    filter_str = "[Unread]=true" \
-                 f" AND [SenderEmailAddress]='{filter_sender}'" \
-                 f" AND [Subject]='{filter_subj}'"
-    filter_items = items.Restrict(filter_str)
+    filter_str_gen = lambda subj: \
+        "[Unread]=true" \
+        f" AND [SenderEmailAddress]='{filter_sender}'" \
+        f" AND [Subject]='{subj}'"
+    filter_items = itertools.chain(*[items.Restrict(filter_str_gen(s)) for s in filter_subj])
     mails = [i for i in filter_items if i.Class == 43]
     return mails
 
